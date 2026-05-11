@@ -16,6 +16,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardStockRouteImport } from './routes/dashboard.stock'
 import { Route as DashboardRhRouteImport } from './routes/dashboard.rh'
 import { Route as DashboardPatrimoineRouteImport } from './routes/dashboard.patrimoine'
+import { Route as DashboardArchivesRouteImport } from './routes/dashboard.archives'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -52,11 +53,17 @@ const DashboardPatrimoineRoute = DashboardPatrimoineRouteImport.update({
   path: '/patrimoine',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardArchivesRoute = DashboardArchivesRouteImport.update({
+  id: '/archives',
+  path: '/archives',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
   '/dashboard/rh': typeof DashboardRhRoute
   '/dashboard/stock': typeof DashboardStockRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
   '/dashboard/rh': typeof DashboardRhRoute
   '/dashboard/stock': typeof DashboardStockRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
   '/dashboard/rh': typeof DashboardRhRoute
   '/dashboard/stock': typeof DashboardStockRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/archives'
     | '/dashboard/patrimoine'
     | '/dashboard/rh'
     | '/dashboard/stock'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/dashboard/archives'
     | '/dashboard/patrimoine'
     | '/dashboard/rh'
     | '/dashboard/stock'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/archives'
     | '/dashboard/patrimoine'
     | '/dashboard/rh'
     | '/dashboard/stock'
@@ -166,10 +178,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPatrimoineRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/archives': {
+      id: '/dashboard/archives'
+      path: '/archives'
+      fullPath: '/dashboard/archives'
+      preLoaderRoute: typeof DashboardArchivesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardArchivesRoute: typeof DashboardArchivesRoute
   DashboardPatrimoineRoute: typeof DashboardPatrimoineRoute
   DashboardRhRoute: typeof DashboardRhRoute
   DashboardStockRoute: typeof DashboardStockRoute
@@ -177,6 +197,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardArchivesRoute: DashboardArchivesRoute,
   DashboardPatrimoineRoute: DashboardPatrimoineRoute,
   DashboardRhRoute: DashboardRhRoute,
   DashboardStockRoute: DashboardStockRoute,
@@ -195,3 +216,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
