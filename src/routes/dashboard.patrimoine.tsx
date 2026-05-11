@@ -103,7 +103,7 @@ function BatimentsTab() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!f.type || !f.nom) return toast.error("Type et nom requis");
-    const { error } = await supabase.from("batiments").insert({ ...f, created_by: user?.id });
+    const { error } = await supabase.from("batiments").insert({ ...f, created_by: user?.id } as never);
     if (error) return toast.error(error.message);
     toast.success("Bâtiment enregistré"); setOpen(false); load();
     setF({ type: "", nom: "", lieu: "", description: "", observation: "" });

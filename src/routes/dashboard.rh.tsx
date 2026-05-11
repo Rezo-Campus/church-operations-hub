@@ -49,7 +49,7 @@ function RHPage() {
       date_bapteme: form.date_bapteme || null,
       created_by: user?.id,
     };
-    const { error } = await supabase.from("personnel").insert(payload);
+    const { error } = await supabase.from("personnel").insert(payload as never);
     if (error) { toast.error(error.message); return; }
     toast.success("Personnel enregistré");
     setOpen(false);
