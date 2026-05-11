@@ -17,6 +17,7 @@ import { Route as DashboardStockRouteImport } from './routes/dashboard.stock'
 import { Route as DashboardRhRouteImport } from './routes/dashboard.rh'
 import { Route as DashboardPatrimoineRouteImport } from './routes/dashboard.patrimoine'
 import { Route as DashboardArchivesRouteImport } from './routes/dashboard.archives'
+import { Route as DashboardAdminRouteImport } from './routes/dashboard.admin'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -58,11 +59,17 @@ const DashboardArchivesRoute = DashboardArchivesRouteImport.update({
   path: '/archives',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAdminRoute = DashboardAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
   '/dashboard/rh': typeof DashboardRhRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
   '/dashboard/rh': typeof DashboardRhRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
   '/dashboard/rh': typeof DashboardRhRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/admin'
     | '/dashboard/archives'
     | '/dashboard/patrimoine'
     | '/dashboard/rh'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/dashboard/admin'
     | '/dashboard/archives'
     | '/dashboard/patrimoine'
     | '/dashboard/rh'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/admin'
     | '/dashboard/archives'
     | '/dashboard/patrimoine'
     | '/dashboard/rh'
@@ -185,10 +197,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardArchivesRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardAdminRoute: typeof DashboardAdminRoute
   DashboardArchivesRoute: typeof DashboardArchivesRoute
   DashboardPatrimoineRoute: typeof DashboardPatrimoineRoute
   DashboardRhRoute: typeof DashboardRhRoute
@@ -197,6 +217,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAdminRoute: DashboardAdminRoute,
   DashboardArchivesRoute: DashboardArchivesRoute,
   DashboardPatrimoineRoute: DashboardPatrimoineRoute,
   DashboardRhRoute: DashboardRhRoute,
