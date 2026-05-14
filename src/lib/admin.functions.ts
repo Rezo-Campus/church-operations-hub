@@ -27,10 +27,7 @@ const SetRolesInput = z.object({
 
 const DeleteInput = z.object({ user_id: z.string().uuid() });
 
-async function assertAdminGeneral(
-  supabase: SupabaseClient<Database>,
-  userId: string,
-) {
+async function assertAdminGeneral(supabase: SupabaseClient<Database>, userId: string) {
   const { data, error } = await supabase
     .from("user_roles")
     .select("role")
@@ -46,7 +43,8 @@ export const createAdmin = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdminGeneral(context.supabase, context.userId);
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
-      email: data.email, password: data.password,
+      email: data.email,
+      password: data.password,
       email_confirm: true,
       user_metadata: { full_name: data.full_name },
     });
@@ -54,7 +52,9 @@ export const createAdmin = createServerFn({ method: "POST" })
     // Replace any auto-assigned roles with the chosen set
     await supabaseAdmin.from("user_roles").delete().eq("user_id", created.user.id);
     if (data.roles.length) {
-      await supabaseAdmin.from("user_roles").insert(data.roles.map((r) => ({ user_id: created.user!.id, role: r })));
+      await supabaseAdmin
+        .from("user_roles")
+        .insert(data.roles.map((r) => ({ user_id: created.user!.id, role: r })));
     }
     return { id: created.user.id };
   });
@@ -84,7 +84,8 @@ export const deleteAdmin = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => DeleteInput.parse(d))
   .handler(async ({ data, context }) => {
     await assertAdminGeneral(context.supabase, context.userId);
-    if (data.user_id === context.userId) throw new Error("Vous ne pouvez pas supprimer votre propre compte");
+    if (data.user_id === context.userId)
+      throw new Error("Vous ne pouvez pas supprimer votre propre compte");
     const { error } = await supabaseAdmin.auth.admin.deleteUser(data.user_id);
     if (error) throw new Error(error.message);
     return { ok: true };
