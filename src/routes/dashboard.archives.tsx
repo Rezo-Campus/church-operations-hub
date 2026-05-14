@@ -107,7 +107,7 @@ function ArchivesPage() {
         </Dialog>
       </div>
 
-      <Card><CardContent className="p-0">
+      <Card><CardContent className="p-0 overflow-x-auto">
         <Table>
           <TableHeader><TableRow><TableHead>N° d'enregistrement</TableHead><TableHead>Titre</TableHead><TableHead>De</TableHead><TableHead>À</TableHead><TableHead>Date</TableHead><TableHead>Fichier</TableHead></TableRow></TableHeader>
           <TableBody>
