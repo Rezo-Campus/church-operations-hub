@@ -83,14 +83,14 @@ function AdminPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Gestion des accès</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Gestion des accès</h1>
           <p className="text-sm text-muted-foreground">Créez les comptes des autres administrateurs et attribuez leurs accès.</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nouveau compte admin</Button></DialogTrigger>
-          <DialogContent>
+          <DialogTrigger asChild><Button className="w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" />Nouveau compte admin</Button></DialogTrigger>
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>Créer un compte administrateur</DialogTitle></DialogHeader>
             <form onSubmit={submit} className="space-y-4">
               <div><Label>Nom complet *</Label><Input required value={f.full_name} onChange={(e) => setF({ ...f, full_name: e.target.value })} /></div>
@@ -113,7 +113,7 @@ function AdminPage() {
         </Dialog>
       </div>
 
-      <Card><CardContent className="p-0">
+      <Card><CardContent className="p-0 overflow-x-auto">
         <Table>
           <TableHeader><TableRow><TableHead>Utilisateur</TableHead><TableHead>Email</TableHead><TableHead>Rôles</TableHead><TableHead className="w-32">Actions</TableHead></TableRow></TableHeader>
           <TableBody>

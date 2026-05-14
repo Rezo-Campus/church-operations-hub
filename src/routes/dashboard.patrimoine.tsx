@@ -28,11 +28,11 @@ function PatrimoinePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Patrimoine</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Patrimoine</h1>
         <p className="text-sm text-muted-foreground">Terrains, bâtiments et véhicules de l'Église</p>
       </div>
       <Tabs defaultValue="terrains">
-        <TabsList><TabsTrigger value="terrains">Terrains</TabsTrigger><TabsTrigger value="batiments">Bâtiments</TabsTrigger><TabsTrigger value="vehicules">Véhicules</TabsTrigger></TabsList>
+        <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex"><TabsTrigger value="terrains">Terrains</TabsTrigger><TabsTrigger value="batiments">Bâtiments</TabsTrigger><TabsTrigger value="vehicules">Véhicules</TabsTrigger></TabsList>
         <TabsContent value="terrains"><TerrainsTab /></TabsContent>
         <TabsContent value="batiments"><BatimentsTab /></TabsContent>
         <TabsContent value="vehicules"><VehiculesTab /></TabsContent>

@@ -59,16 +59,16 @@ function RHPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Ressources Humaines</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Ressources Humaines</h1>
           <p className="text-sm text-muted-foreground">Personnel de l'Église Évangélique du Congo</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nouveau personnel</Button></DialogTrigger>
+          <DialogTrigger asChild><Button className="w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" />Nouveau personnel</Button></DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>Enregistrer un personnel</DialogTitle></DialogHeader>
-            <form onSubmit={submit} className="grid grid-cols-2 gap-4">
+            <form onSubmit={submit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div><Label>Type *</Label>
                 <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
                   <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
@@ -91,13 +91,13 @@ function RHPage() {
               <div><Label>Lieu d'étude</Label><Input value={form.lieu_etude} onChange={(e) => setForm({ ...form, lieu_etude: e.target.value })} /></div>
               <div><Label>Fonction</Label><Input value={form.fonction} onChange={(e) => setForm({ ...form, fonction: e.target.value })} /></div>
               <div><Label>Lieu de service</Label><Input value={form.lieu_service} onChange={(e) => setForm({ ...form, lieu_service: e.target.value })} /></div>
-              <div className="col-span-2"><Button type="submit" className="w-full">Enregistrer</Button></div>
+              <div className="sm:col-span-2"><Button type="submit" className="w-full">Enregistrer</Button></div>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <Card><CardContent className="p-0">
+      <Card><CardContent className="p-0 overflow-x-auto">
         <Table>
           <TableHeader><TableRow>
             <TableHead>Nom & Prénom</TableHead><TableHead>Type</TableHead><TableHead>Catégorie</TableHead>
