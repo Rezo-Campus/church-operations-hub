@@ -48,9 +48,17 @@ export const setUserRoles = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => SetRolesInput.parse(d))
   .handler(async ({ data, context }) => {
     await assertAdminGeneral(context.supabase, context.userId);
-    await supabaseAdmin.from("user_roles").delete().eq("user_id", data.user_id);
+    const { error: deleteError } = await context.supabase
+      .from("user_roles")
+      .delete()
+      .eq("user_id", data.user_id);
+    if (deleteError) throw new Error(deleteError.message);
+
     if (data.roles.length) {
-      await supabaseAdmin.from("user_roles").insert(data.roles.map((r) => ({ user_id: data.user_id, role: r })));
+      const { error: insertError } = await context.supabase
+        .from("user_roles")
+        .insert(data.roles.map((r) => ({ user_id: data.user_id, role: r })));
+      if (insertError) throw new Error(insertError.message);
     }
     return { ok: true };
   });
