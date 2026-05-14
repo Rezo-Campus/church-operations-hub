@@ -28,11 +28,11 @@ function PatrimoinePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Patrimoine</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Patrimoine</h1>
         <p className="text-sm text-muted-foreground">Terrains, bâtiments et véhicules de l'Église</p>
       </div>
       <Tabs defaultValue="terrains">
-        <TabsList><TabsTrigger value="terrains">Terrains</TabsTrigger><TabsTrigger value="batiments">Bâtiments</TabsTrigger><TabsTrigger value="vehicules">Véhicules</TabsTrigger></TabsList>
+        <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex"><TabsTrigger value="terrains">Terrains</TabsTrigger><TabsTrigger value="batiments">Bâtiments</TabsTrigger><TabsTrigger value="vehicules">Véhicules</TabsTrigger></TabsList>
         <TabsContent value="terrains"><TerrainsTab /></TabsContent>
         <TabsContent value="batiments"><BatimentsTab /></TabsContent>
         <TabsContent value="vehicules"><VehiculesTab /></TabsContent>
@@ -62,7 +62,7 @@ function TerrainsTab() {
           <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nouveau terrain</Button></DialogTrigger>
           <DialogContent className="max-w-xl">
             <DialogHeader><DialogTitle>Nouveau terrain</DialogTitle></DialogHeader>
-            <form onSubmit={submit} className="grid grid-cols-2 gap-4">
+            <form onSubmit={submit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div><Label>Type de valeur</Label>
                 <Select value={f.valeur_type} onValueChange={(v) => setF({ ...f, valeur_type: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
@@ -72,15 +72,15 @@ function TerrainsTab() {
               <div><Label>Montant (FCFA)</Label><Input type="number" value={f.valeur_montant} onChange={(e) => setF({ ...f, valeur_montant: e.target.value })} /></div>
               <div><Label>Nombre</Label><Input type="number" value={f.nombre} onChange={(e) => setF({ ...f, nombre: e.target.value })} /></div>
               <div><Label>Superficie</Label><Input value={f.superficie} onChange={(e) => setF({ ...f, superficie: e.target.value })} placeholder="ex. 500 m²" /></div>
-              <div className="col-span-2"><Label>Lieu *</Label><Input required value={f.lieu} onChange={(e) => setF({ ...f, lieu: e.target.value })} /></div>
-              <div className="col-span-2 flex items-center gap-2"><Checkbox checked={f.bati} onCheckedChange={(v) => setF({ ...f, bati: !!v })} /><Label>Bâti</Label></div>
-              <div className="col-span-2"><Label>Observation</Label><Textarea value={f.observation} onChange={(e) => setF({ ...f, observation: e.target.value })} /></div>
-              <div className="col-span-2"><Button type="submit" className="w-full">Enregistrer</Button></div>
+              <div className="sm:col-span-2"><Label>Lieu *</Label><Input required value={f.lieu} onChange={(e) => setF({ ...f, lieu: e.target.value })} /></div>
+              <div className="sm:col-span-2 flex items-center gap-2"><Checkbox checked={f.bati} onCheckedChange={(v) => setF({ ...f, bati: !!v })} /><Label>Bâti</Label></div>
+              <div className="sm:col-span-2"><Label>Observation</Label><Textarea value={f.observation} onChange={(e) => setF({ ...f, observation: e.target.value })} /></div>
+              <div className="sm:col-span-2"><Button type="submit" className="w-full">Enregistrer</Button></div>
             </form>
           </DialogContent>
         </Dialog>
       </div>
-      <Card><CardContent className="p-0">
+      <Card><CardContent className="p-0 overflow-x-auto">
         <Table>
           <TableHeader><TableRow><TableHead>Lieu</TableHead><TableHead>Valeur</TableHead><TableHead>Nombre</TableHead><TableHead>Superficie</TableHead><TableHead>Bâti</TableHead><TableHead>Observation</TableHead></TableRow></TableHeader>
           <TableBody>
@@ -131,7 +131,7 @@ function BatimentsTab() {
           </DialogContent>
         </Dialog>
       </div>
-      <Card><CardContent className="p-0">
+      <Card><CardContent className="p-0 overflow-x-auto">
         <Table>
           <TableHeader><TableRow><TableHead>Nom</TableHead><TableHead>Type</TableHead><TableHead>Lieu</TableHead><TableHead>Observation</TableHead></TableRow></TableHeader>
           <TableBody>
@@ -166,7 +166,7 @@ function VehiculesTab() {
           <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nouveau véhicule</Button></DialogTrigger>
           <DialogContent className="max-w-xl">
             <DialogHeader><DialogTitle>Nouveau véhicule</DialogTitle></DialogHeader>
-            <form onSubmit={submit} className="grid grid-cols-2 gap-4">
+            <form onSubmit={submit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div><Label>Marque *</Label><Input required value={f.marque} onChange={(e) => setF({ ...f, marque: e.target.value })} /></div>
               <div><Label>Modèle</Label><Input value={f.modele} onChange={(e) => setF({ ...f, modele: e.target.value })} /></div>
               <div><Label>Immatriculation</Label><Input value={f.immatriculation} onChange={(e) => setF({ ...f, immatriculation: e.target.value })} /></div>
@@ -176,13 +176,13 @@ function VehiculesTab() {
               <div><Label>Couleur</Label><Input value={f.couleur} onChange={(e) => setF({ ...f, couleur: e.target.value })} /></div>
               <div><Label>Affectation</Label><Input value={f.affectation} onChange={(e) => setF({ ...f, affectation: e.target.value })} /></div>
               <div><Label>État</Label><Input placeholder="Bon, moyen, à réparer..." value={f.etat} onChange={(e) => setF({ ...f, etat: e.target.value })} /></div>
-              <div className="col-span-2"><Label>Observation</Label><Textarea value={f.observation} onChange={(e) => setF({ ...f, observation: e.target.value })} /></div>
-              <div className="col-span-2"><Button type="submit" className="w-full">Enregistrer</Button></div>
+              <div className="sm:col-span-2"><Label>Observation</Label><Textarea value={f.observation} onChange={(e) => setF({ ...f, observation: e.target.value })} /></div>
+              <div className="sm:col-span-2"><Button type="submit" className="w-full">Enregistrer</Button></div>
             </form>
           </DialogContent>
         </Dialog>
       </div>
-      <Card><CardContent className="p-0">
+      <Card><CardContent className="p-0 overflow-x-auto">
         <Table>
           <TableHeader><TableRow><TableHead>Marque/Modèle</TableHead><TableHead>Immat.</TableHead><TableHead>Année</TableHead><TableHead>Affectation</TableHead><TableHead>État</TableHead></TableRow></TableHeader>
           <TableBody>
