@@ -82,13 +82,13 @@ function ArchivesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Archives — Documents internes</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Archives — Documents internes</h1>
           <p className="text-sm text-muted-foreground">{isAdminGeneral ? "Vous voyez toutes les archives." : "Vous voyez uniquement vos échanges avec l'Admin Général."}</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nouveau document</Button></DialogTrigger>
+          <DialogTrigger asChild><Button className="w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" />Nouveau document</Button></DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader><DialogTitle>Archiver un document</DialogTitle></DialogHeader>
             <form onSubmit={submit} className="space-y-4">

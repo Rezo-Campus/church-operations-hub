@@ -48,13 +48,13 @@ function StockPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Stock — Cartes d'église</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Stock — Cartes d'église</h1>
           <p className="text-sm text-muted-foreground">Gestion des entrées et sorties</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nouveau mouvement</Button></DialogTrigger>
+          <DialogTrigger asChild><Button className="w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" />Nouveau mouvement</Button></DialogTrigger>
           <DialogContent className="max-w-xl">
             <DialogHeader><DialogTitle>Nouveau mouvement</DialogTitle></DialogHeader>
             <form onSubmit={submit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -77,7 +77,7 @@ function StockPage() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card><CardContent className="flex items-center gap-3 p-4"><div className="rounded bg-emerald-500/10 p-3 text-emerald-600"><ArrowDown className="h-5 w-5" /></div><div><div className="text-2xl font-bold">{totals.entrees}</div><div className="text-xs text-muted-foreground">Entrées</div></div></CardContent></Card>
         <Card><CardContent className="flex items-center gap-3 p-4"><div className="rounded bg-rose-500/10 p-3 text-rose-600"><ArrowUp className="h-5 w-5" /></div><div><div className="text-2xl font-bold">{totals.sorties}</div><div className="text-xs text-muted-foreground">Sorties</div></div></CardContent></Card>
         <Card><CardContent className="flex items-center gap-3 p-4"><div className="rounded bg-primary/10 p-3 text-primary"><Package className="h-5 w-5" /></div><div><div className="text-2xl font-bold">{totals.solde}</div><div className="text-xs text-muted-foreground">Solde en stock</div></div></CardContent></Card>
