@@ -1,9 +1,17 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import type { Database } from "@/integrations/supabase/types";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
-const ROLES = ["admin_general", "admin_rh", "admin_patrimoine", "admin_stock", "admin_archives"] as const;
+const ROLES = [
+  "admin_general",
+  "admin_rh",
+  "admin_patrimoine",
+  "admin_stock",
+  "admin_archives",
+] as const;
 
 const CreateInput = z.object({
   email: z.string().email(),
@@ -19,8 +27,16 @@ const SetRolesInput = z.object({
 
 const DeleteInput = z.object({ user_id: z.string().uuid() });
 
-async function assertAdminGeneral(supabase: any, userId: string) {
-  const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin_general").maybeSingle();
+async function assertAdminGeneral(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+) {
+  const { data, error } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("role", "admin_general")
+    .maybeSingle();
   if (error || !data) throw new Response("Forbidden", { status: 403 });
 }
 
