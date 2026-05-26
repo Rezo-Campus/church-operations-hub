@@ -86,6 +86,7 @@ export type Database = {
       cartes_stock: {
         Row: {
           beneficiaire: string | null
+          cout_acquisition: number | null
           created_at: string
           created_by: string | null
           date_mouvement: string
@@ -95,10 +96,13 @@ export type Database = {
           numero_serie_debut: string | null
           numero_serie_fin: string | null
           observation: string | null
+          prix_vente: number | null
           quantite: number
+          type_article: string
         }
         Insert: {
           beneficiaire?: string | null
+          cout_acquisition?: number | null
           created_at?: string
           created_by?: string | null
           date_mouvement?: string
@@ -108,10 +112,13 @@ export type Database = {
           numero_serie_debut?: string | null
           numero_serie_fin?: string | null
           observation?: string | null
+          prix_vente?: number | null
           quantite: number
+          type_article?: string
         }
         Update: {
           beneficiaire?: string | null
+          cout_acquisition?: number | null
           created_at?: string
           created_by?: string | null
           date_mouvement?: string
@@ -121,7 +128,9 @@ export type Database = {
           numero_serie_debut?: string | null
           numero_serie_fin?: string | null
           observation?: string | null
+          prix_vente?: number | null
           quantite?: number
+          type_article?: string
         }
         Relationships: []
       }
@@ -342,6 +351,10 @@ export type Database = {
         | "Departement"
         | "Institut theologique"
         | "Centre de Sante"
+        | "Ecole"
+        | "Paroisse"
+        | "Commission"
+        | "Presbytere"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -490,6 +503,10 @@ export const Constants = {
         "Departement",
         "Institut theologique",
         "Centre de Sante",
+        "Ecole",
+        "Paroisse",
+        "Commission",
+        "Presbytere",
       ],
     },
   },

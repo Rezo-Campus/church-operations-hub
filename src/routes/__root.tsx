@@ -72,20 +72,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "EEC — Gestion intégrée" },
-      { name: "description", content: "Plateforme de gestion RH, Patrimoine, Stock et Archives de l'Église Évangélique du Congo." },
-      { name: "author", content: "EEC" },
-      { property: "og:title", content: "EEC — Gestion intégrée" },
-      { property: "og:description", content: "Plateforme de gestion RH, Patrimoine, Stock et Archives." },
+      { title: "Présidence EEC — Plateforme de gestion administrative" },
+      {
+        name: "description",
+        content:
+          "Plateforme numérique de gestion administrative de la Présidence de l'Église Évangélique du Congo. Gestion des Ressources Humaines, du Patrimoine, du Stock et des Archives.",
+      },
+      { name: "author", content: "Présidence de l'Église Évangélique du Congo" },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Présidence EEC — Gestion administrative" },
+      {
+        property: "og:description",
+        content:
+          "Espace administrateur sécurisé de la Présidence de l'Église Évangélique du Congo. Accès réservé aux administrateurs autorisés.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/logo.png" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Présidence EEC — Gestion administrative" },
+      { name: "twitter:image", content: "/logo.png" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/logo.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -96,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -10,19 +10,53 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus, Users, UserCheck, UserX } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/rh")({ component: RHPage });
 
-const TYPES = ["Consistoire", "Departement", "Institut theologique", "Centre de Sante"] as const;
+const TYPES = [
+  "Consistoire",
+  "Departement",
+  "Institut theologique",
+  "Centre de Sante",
+  "Ecole",
+  "Paroisse",
+  "Commission",
+  "Presbytere",
+] as const;
+
 const CATS = ["Ecclesiastique", "Non-Ecclesiastique"] as const;
+type Cat = (typeof CATS)[number] | "Tous";
+
+const EMPTY_FORM = {
+  type: "",
+  categorie: "",
+  nom: "",
+  prenom: "",
+  date_naissance: "",
+  lieu_naissance: "",
+  date_bapteme: "",
+  lieu_bapteme: "",
+  niveau_etude: "",
+  lieu_etude: "",
+  fonction: "",
+  lieu_service: "",
+};
 
 interface Personnel {
-  id: string; type: string; categorie: string; nom: string; prenom: string;
-  date_naissance: string | null; lieu_naissance: string | null;
-  date_bapteme: string | null; lieu_bapteme: string | null;
-  niveau_etude: string | null; lieu_etude: string | null;
-  fonction: string | null; lieu_service: string | null;
+  id: string;
+  type: string;
+  categorie: string;
+  nom: string;
+  prenom: string;
+  date_naissance: string | null;
+  lieu_naissance: string | null;
+  date_bapteme: string | null;
+  lieu_bapteme: string | null;
+  niveau_etude: string | null;
+  lieu_etude: string | null;
+  fonction: string | null;
+  lieu_service: string | null;
 }
 
 function RHPage() {
@@ -30,19 +64,48 @@ function RHPage() {
   const allowed = isAdminGeneral || hasRole("admin_rh");
   const [list, setList] = useState<Personnel[]>([]);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ type: "", categorie: "", nom: "", prenom: "", date_naissance: "", lieu_naissance: "", date_bapteme: "", lieu_bapteme: "", niveau_etude: "", lieu_etude: "", fonction: "", lieu_service: "" });
+  const [form, setForm] = useState({ ...EMPTY_FORM });
+  const [catFilter, setCatFilter] = useState<Cat>("Tous");
+  const [search, setSearch] = useState("");
 
   const load = async () => {
     const { data, error } = await supabase.from("personnel").select("*").order("created_at", { ascending: false });
-    if (error) toast.error(error.message); else setList((data ?? []) as Personnel[]);
+    if (error) toast.error(error.message);
+    else setList((data ?? []) as Personnel[]);
   };
+
   useEffect(() => { if (allowed) load(); }, [allowed]);
 
   if (!allowed) return <AccessDenied />;
 
+  const filtered = useMemo(() => {
+    let result = catFilter === "Tous" ? list : list.filter((p) => p.categorie === catFilter);
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.nom.toLowerCase().includes(q) ||
+          p.prenom.toLowerCase().includes(q) ||
+          p.fonction?.toLowerCase().includes(q) ||
+          p.lieu_service?.toLowerCase().includes(q) ||
+          p.type.toLowerCase().includes(q),
+      );
+    }
+    return result;
+  }, [list, catFilter, search]);
+
+  const counts = useMemo(() => ({
+    tous: list.length,
+    eccl: list.filter((p) => p.categorie === "Ecclesiastique").length,
+    nonEccl: list.filter((p) => p.categorie === "Non-Ecclesiastique").length,
+  }), [list]);
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.type || !form.categorie || !form.nom || !form.prenom) { toast.error("Type, catégorie, nom et prénom requis"); return; }
+    if (!form.type || !form.categorie || !form.nom || !form.prenom) {
+      toast.error("Type, catégorie, nom et prénom requis");
+      return;
+    }
     const payload = {
       ...form,
       date_naissance: form.date_naissance || null,
@@ -53,32 +116,41 @@ function RHPage() {
     if (error) { toast.error(error.message); return; }
     toast.success("Personnel enregistré");
     setOpen(false);
-    setForm({ type: "", categorie: "", nom: "", prenom: "", date_naissance: "", lieu_naissance: "", date_bapteme: "", lieu_bapteme: "", niveau_etude: "", lieu_etude: "", fonction: "", lieu_service: "" });
+    setForm({ ...EMPTY_FORM });
     load();
   };
 
   return (
     <div className="space-y-6">
+      {/* En-tête */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold">Ressources Humaines</h1>
           <p className="text-sm text-muted-foreground">Personnel de l'Église Évangélique du Congo</p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button className="w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" />Nouveau personnel</Button></DialogTrigger>
+          <DialogTrigger asChild>
+            <Button className="w-full sm:w-auto"><Plus className="mr-2 h-4 w-4" />Nouveau personnel</Button>
+          </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>Enregistrer un personnel</DialogTitle></DialogHeader>
             <form onSubmit={submit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div><Label>Type *</Label>
+              <div>
+                <Label>Type *</Label>
                 <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
                   <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
-                  <SelectContent>{TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                  <SelectContent>
+                    {TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                  </SelectContent>
                 </Select>
               </div>
-              <div><Label>Catégorie *</Label>
+              <div>
+                <Label>Catégorie *</Label>
                 <Select value={form.categorie} onValueChange={(v) => setForm({ ...form, categorie: v })}>
                   <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
-                  <SelectContent>{CATS.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                  <SelectContent>
+                    {CATS.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
                 </Select>
               </div>
               <div><Label>Nom *</Label><Input value={form.nom} onChange={(e) => setForm({ ...form, nom: e.target.value })} required /></div>
@@ -97,29 +169,93 @@ function RHPage() {
         </Dialog>
       </div>
 
-      <Card><CardContent className="p-0 overflow-x-auto">
-        <Table>
-          <TableHeader><TableRow>
-            <TableHead>Nom & Prénom</TableHead><TableHead>Type</TableHead><TableHead>Catégorie</TableHead>
-            <TableHead>Fonction</TableHead><TableHead>Lieu de service</TableHead>
-          </TableRow></TableHeader>
-          <TableBody>
-            {list.length === 0 ? (
-              <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">Aucun personnel enregistré</TableCell></TableRow>
-            ) : list.map((p) => (
-              <TableRow key={p.id}>
-                <TableCell className="font-medium">{p.nom} {p.prenom}</TableCell>
-                <TableCell>{p.type}</TableCell><TableCell>{p.categorie}</TableCell>
-                <TableCell>{p.fonction ?? "—"}</TableCell><TableCell>{p.lieu_service ?? "—"}</TableCell>
+      {/* Filtres catégorie + recherche */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex gap-2 flex-wrap">
+          {(["Tous", "Ecclesiastique", "Non-Ecclesiastique"] as Cat[]).map((cat) => {
+            const count = cat === "Tous" ? counts.tous : cat === "Ecclesiastique" ? counts.eccl : counts.nonEccl;
+            const Icon = cat === "Tous" ? Users : cat === "Ecclesiastique" ? UserCheck : UserX;
+            const active = catFilter === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setCatFilter(cat)}
+                className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-background hover:bg-muted border-border"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{cat === "Ecclesiastique" ? "Ecclésiastique" : cat === "Non-Ecclesiastique" ? "Non-Ecclésiastique" : "Tous"}</span>
+                <span className={`rounded-full px-1.5 py-0.5 text-xs ${active ? "bg-primary-foreground/20 text-primary-foreground" : "bg-muted-foreground/20"}`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <Input
+          className="flex-1"
+          placeholder="Rechercher par nom, prénom, fonction, lieu de service…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {/* Tableau */}
+      <Card>
+        <CardContent className="p-0 overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nom & Prénom</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Catégorie</TableHead>
+                <TableHead>Fonction</TableHead>
+                <TableHead>Lieu de service</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent></Card>
+            </TableHeader>
+            <TableBody>
+              {filtered.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                    {list.length === 0 ? "Aucun personnel enregistré" : "Aucun résultat pour cette recherche"}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filtered.map((p) => (
+                  <TableRow key={p.id}>
+                    <TableCell className="font-medium">{p.nom} {p.prenom}</TableCell>
+                    <TableCell>{p.type}</TableCell>
+                    <TableCell>
+                      <span className={`rounded px-2 py-0.5 text-xs font-medium ${
+                        p.categorie === "Ecclesiastique"
+                          ? "bg-blue-500/10 text-blue-700"
+                          : "bg-orange-500/10 text-orange-700"
+                      }`}>
+                        {p.categorie === "Ecclesiastique" ? "Ecclésiastique" : "Non-Ecclésiastique"}
+                      </span>
+                    </TableCell>
+                    <TableCell>{p.fonction ?? "—"}</TableCell>
+                    <TableCell>{p.lieu_service ?? "—"}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
 export function AccessDenied() {
-  return <Card><CardContent className="p-8 text-center text-muted-foreground">Accès refusé. Cet espace est réservé aux administrateurs autorisés.</CardContent></Card>;
+  return (
+    <Card>
+      <CardContent className="p-8 text-center text-muted-foreground">
+        Accès refusé. Cet espace est réservé aux administrateurs autorisés.
+      </CardContent>
+    </Card>
+  );
 }

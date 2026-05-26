@@ -64,14 +64,15 @@ export const setUserRoles = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => SetRolesInput.parse(d))
   .handler(async ({ data, context }) => {
     await assertAdminGeneral(context.supabase, context.userId);
-    const { error: deleteError } = await context.supabase
+
+    const { error: deleteError } = await supabaseAdmin
       .from("user_roles")
       .delete()
       .eq("user_id", data.user_id);
     if (deleteError) throw new Error(deleteError.message);
 
     if (data.roles.length) {
-      const { error: insertError } = await context.supabase
+      const { error: insertError } = await supabaseAdmin
         .from("user_roles")
         .insert(data.roles.map((r) => ({ user_id: data.user_id, role: r })));
       if (insertError) throw new Error(insertError.message);

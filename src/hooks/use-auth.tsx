@@ -25,22 +25,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loadRoles = async (uid: string | undefined) => {
     if (!uid) { setRoles([]); return; }
-    const { data } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+    const { data, error } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+    if (error) console.error("[auth] loadRoles error:", error.message);
     setRoles((data ?? []).map((r) => r.role as AppRole));
   };
 
   useEffect(() => {
+    let uid: string | undefined;
+
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      uid = s?.user?.id;
       setSession(s);
       setUser(s?.user ?? null);
       setTimeout(() => loadRoles(s?.user?.id), 0);
     });
+
     supabase.auth.getSession().then(({ data }) => {
+      uid = data.session?.user?.id;
       setSession(data.session);
       setUser(data.session?.user ?? null);
       loadRoles(data.session?.user?.id).finally(() => setLoading(false));
     });
-    return () => sub.subscription.unsubscribe();
+
+    // Recharge les rôles en temps réel si l'admin les modifie
+    const channel = supabase
+      .channel("user_roles_watch")
+      .on("postgres_changes", { event: "*", schema: "public", table: "user_roles" }, (payload: any) => {
+        if (payload.new?.user_id === uid || payload.old?.user_id === uid) {
+          loadRoles(uid);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      sub.subscription.unsubscribe();
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const value: AuthContextValue = {
