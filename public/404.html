@@ -37,6 +37,11 @@
     a:hover { background: #1a3a80; }
     footer { margin-top: 3rem; font-size: 0.7rem; color: #94a3b8; }
   </style>
+  <script>
+    // GitHub Pages SPA routing : on 404, save path and redirect to root
+    sessionStorage.setItem('spa-path', location.pathname + location.search + location.hash);
+    location.replace('/');
+  </script>
 </head>
 <body>
   <img src="/logo.png" alt="Logo EEC" />

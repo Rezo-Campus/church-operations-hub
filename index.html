@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Présidence EEC — Plateforme de gestion administrative</title>
+    <meta name="description" content="Plateforme numérique de gestion administrative de la Présidence de l'Église Évangélique du Congo." />
+    <script>
+      // GitHub Pages SPA routing : restaure le chemin après redirection 404
+      (function () {
+        var r = sessionStorage.getItem("spa-path");
+        if (r) { sessionStorage.removeItem("spa-path"); window.history.replaceState(null, null, r); }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/client.tsx"></script>
+  </body>
+</html>
