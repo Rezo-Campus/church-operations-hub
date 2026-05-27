@@ -49,6 +49,8 @@ export const flattenMiddlewares = (m) => m;
 export const FrameType = {};
 `
 
+  const rootStaticPath = path.resolve(__dirname, './src/__root.static.tsx')
+
   return {
     name: 'stub-server-only-modules',
     enforce: 'pre',
@@ -63,6 +65,9 @@ export const FrameType = {};
         return '\0stub:auth-middleware'
       if (id.endsWith('/client.server') || id.endsWith('/client.server.ts'))
         return '\0stub:client-server'
+      // Replace the SSR root (has shellComponent) with the plain SPA root
+      if (id.endsWith('/routes/__root') || id.endsWith('/routes/__root.tsx'))
+        return rootStaticPath
     },
     load(id) {
       if (id === '\0stub:react-start') return REACT_START_STUB
@@ -93,11 +98,6 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '@', replacement: path.resolve(__dirname, './src') },
-      // Swap the SSR root shell for a plain SPA root (no shellComponent)
-      {
-        find: /.*routes\/__root(\.tsx)?$/,
-        replacement: path.resolve(__dirname, './src/__root.static.tsx'),
-      },
     ],
   },
   build: {
