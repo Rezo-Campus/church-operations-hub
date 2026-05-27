@@ -226,16 +226,12 @@ function LoginPage() {
 
               <h2 className="text-xl font-bold text-gray-900">Créer un compte</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                {hasUsers
-                  ? "Ce compte sera soumis à l'approbation de l'Administrateur Général."
-                  : "Première installation — ce compte deviendra l'Administrateur Général."}
+                {"Créez un compte et contactez l'Administrateur Général pour vous attribuer des accès."}
               </p>
 
-              {!hasUsers && (
-                <div className="mt-4 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-xs text-blue-800">
-                  Aucun compte n'existe encore. Le premier compte créé obtient automatiquement le rôle d'<strong>Administrateur Général</strong>.
-                </div>
-              )}
+              <div className="mt-4 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-xs text-blue-800">
+                Une fois le compte créé, vérifiez votre boîte mail pour valider votre adresse e-mail avant de vous connecter.
+              </div>
 
               <form onSubmit={handleSignup} className="mt-5 space-y-4">
                 <div className="space-y-1.5">
