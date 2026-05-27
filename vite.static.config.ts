@@ -106,12 +106,20 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) return 'react'
+          if (!id.includes('node_modules')) return
+          // Keep React + its runtime deps (scheduler, jsx-runtime, etc.) in ONE chunk.
+          // Splitting scheduler into "vendor" breaks React 19 ("Cannot set properties of undefined (setting 'Activity')").
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/scheduler/') ||
+            id.includes('node_modules/use-sync-external-store/')
+          ) return 'react'
           if (id.includes('@tanstack/react-router') || id.includes('@tanstack/router-core')) return 'router'
           if (id.includes('@supabase')) return 'supabase'
           if (id.includes('@radix-ui')) return 'ui'
           if (id.includes('recharts') || id.includes('d3-') || id.includes('victory-')) return 'charts'
-          if (id.includes('node_modules')) return 'vendor'
+          return 'vendor'
         },
       },
     },
