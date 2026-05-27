@@ -1,22 +1,74 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ── TITRE & DESCRIPTION ── -->
     <title>Présidence EEC — Plateforme de gestion administrative</title>
-    <meta name="description" content="Plateforme numérique de gestion administrative de la Présidence de l'Église Évangélique du Congo." />
+    <meta name="description" content="Plateforme numérique officielle de gestion administrative de la Présidence de l'Église Évangélique du Congo (EEC). Suivi des membres, finances, personnel et activités." />
+    <meta name="keywords" content="Présidence EEC, Église Évangélique du Congo, gestion administrative, plateforme, Congo, Brazzaville, protestant" />
+    <meta name="author" content="Présidence de l'Église Évangélique du Congo" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href="https://presidence-eec.com/" />
+
+    <!-- ── FAVICONS ── -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <!-- ── OPEN GRAPH (Facebook, WhatsApp, LinkedIn) ── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Présidence EEC" />
+    <meta property="og:title" content="Présidence EEC — Plateforme de gestion administrative" />
+    <meta property="og:description" content="Plateforme numérique officielle de gestion administrative de la Présidence de l'Église Évangélique du Congo." />
+    <meta property="og:url" content="https://presidence-eec.com/" />
+    <meta property="og:image" content="https://presidence-eec.com/logo.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content="Présidence de l'Église Évangélique du Congo" />
+    <meta property="og:locale" content="fr_CG" />
+
+    <!-- ── TWITTER / X CARD ── -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Présidence EEC — Gestion administrative" />
+    <meta name="twitter:description" content="Plateforme numérique officielle de la Présidence de l'Église Évangélique du Congo." />
+    <meta name="twitter:image" content="https://presidence-eec.com/logo.png" />
+    <meta name="twitter:image:alt" content="Présidence de l'Église Évangélique du Congo" />
+
+    <!-- ── DONNÉES STRUCTURÉES JSON-LD (Google) ── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "GovernmentOrganization",
+      "name": "Présidence de l'Église Évangélique du Congo",
+      "alternateName": "Présidence EEC",
+      "url": "https://presidence-eec.com",
+      "logo": "https://presidence-eec.com/logo.png",
+      "description": "Instance dirigeante de l'Église Évangélique du Congo (EEC), fondée en 1909. La Présidence coordonne l'administration centrale, les synodes et les paroisses de l'EEC.",
+      "foundingDate": "1909",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Brazzaville",
+        "addressCountry": "CG"
+      },
+      "parentOrganization": {
+        "@type": "ReligiousOrganization",
+        "name": "Église Évangélique du Congo",
+        "url": "https://eeccg.net"
+      }
+    }
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <!-- Restaure l'URL après la redirection 404.html (SPA sur GitHub Pages) -->
     <script>
-      // GitHub Pages SPA routing : restaure le chemin après redirection 404
       (function () {
         var r = sessionStorage.getItem("spa-path");
         if (r) { sessionStorage.removeItem("spa-path"); window.history.replaceState(null, null, r); }
       })();
     </script>
-  </head>
-  <body>
-    <div id="root"></div>
     <script type="module" src="./client.tsx"></script>
   </body>
 </html>
