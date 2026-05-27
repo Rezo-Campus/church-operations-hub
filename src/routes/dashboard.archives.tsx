@@ -93,7 +93,7 @@ function ArchivesPage() {
             <DialogHeader><DialogTitle>Archiver un document</DialogTitle></DialogHeader>
             <form onSubmit={submit} className="space-y-4">
               <div><Label>Titre *</Label><Input required value={f.titre} onChange={(e) => setF({ ...f, titre: e.target.value })} /></div>
-              <div><Label>Destinataire *</Label>
+              <div><Label>Destinataire(s) *</Label>
                 <Select value={f.receiver_id} onValueChange={(v) => setF({ ...f, receiver_id: v })}>
                   <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
                   <SelectContent>{possibleReceivers.map((p) => <SelectItem key={p.id} value={p.id}>{p.full_name || p.email}</SelectItem>)}</SelectContent>
