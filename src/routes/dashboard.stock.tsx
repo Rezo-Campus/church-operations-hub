@@ -73,7 +73,7 @@ function StockPage() {
 
   const load = async () => {
     const { data } = await supabase.from("cartes_stock").select("*").order("date_mouvement", { ascending: false });
-    setList((data ?? []) as Mvt[]);
+    setList(((data ?? []) as unknown) as Mvt[]);
   };
 
   useEffect(() => { if (allowed) load(); }, [allowed]);
@@ -137,7 +137,7 @@ function StockPage() {
       observation: f.observation || null,
       created_by: user?.id,
     };
-    const { error } = await supabase.from("cartes_stock").insert(payload);
+    const { error } = await supabase.from("cartes_stock").insert(payload as never);
     if (error) return toast.error(error.message);
     toast.success("Mouvement enregistré");
     setOpen(false);
