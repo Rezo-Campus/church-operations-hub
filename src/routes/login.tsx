@@ -28,7 +28,7 @@ function LoginPage() {
     });
   }, []);
 
-  const handleLogin = async (e: SubmitEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget as HTMLFormElement);
     setBusy(true);
@@ -45,7 +45,7 @@ function LoginPage() {
     }
   };
 
-  const handleSignup = async (e: SubmitEvent) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget as HTMLFormElement);
     setBusy(true);
