@@ -1,13 +1,10 @@
-import './styles.css'
+import '../src/styles.css'
 import { RouterProvider } from '@tanstack/react-router'
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { getRouter } from './router'
+import { getRouter } from '../src/router'
 
 const router = getRouter()
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+  <RouterProvider router={router} />
 )
