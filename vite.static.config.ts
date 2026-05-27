@@ -96,7 +96,7 @@ export default defineConfig({
       // Swap the SSR root shell for a plain SPA root (no shellComponent)
       {
         find: /.*routes\/__root(\.tsx)?$/,
-        replacement: path.resolve(__dirname, './src/routes/__root.static.tsx'),
+        replacement: path.resolve(__dirname, './src/__root.static.tsx'),
       },
     ],
   },

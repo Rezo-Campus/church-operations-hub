@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as _rootStaticRouteImport } from './routes/__root.static'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,11 +19,6 @@ import { Route as DashboardPatrimoineRouteImport } from './routes/dashboard.patr
 import { Route as DashboardArchivesRouteImport } from './routes/dashboard.archives'
 import { Route as DashboardAdminRouteImport } from './routes/dashboard.admin'
 
-const _rootStaticRoute = _rootStaticRouteImport.update({
-  id: '/__root/static',
-  path: '/static',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -75,7 +69,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
-  '/static': typeof _rootStaticRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
@@ -86,7 +79,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/static': typeof _rootStaticRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
@@ -99,7 +91,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
-  '/__root/static': typeof _rootStaticRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/archives': typeof DashboardArchivesRoute
   '/dashboard/patrimoine': typeof DashboardPatrimoineRoute
@@ -113,7 +104,6 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
-    | '/static'
     | '/dashboard/admin'
     | '/dashboard/archives'
     | '/dashboard/patrimoine'
@@ -124,7 +114,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
-    | '/static'
     | '/dashboard/admin'
     | '/dashboard/archives'
     | '/dashboard/patrimoine'
@@ -136,7 +125,6 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
-    | '/__root/static'
     | '/dashboard/admin'
     | '/dashboard/archives'
     | '/dashboard/patrimoine'
@@ -149,18 +137,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
-  _rootStaticRoute: typeof _rootStaticRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/__root/static': {
-      id: '/__root/static'
-      path: '/static'
-      fullPath: '/static'
-      preLoaderRoute: typeof _rootStaticRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -253,8 +233,17 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
-  _rootStaticRoute: _rootStaticRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
