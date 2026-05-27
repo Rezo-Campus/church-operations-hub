@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page introuvable — Présidence EEC</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      color: #1e293b;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    img { height: 80px; width: 80px; object-fit: contain; margin-bottom: 1.5rem; }
+    h1 { font-size: 5rem; font-weight: 800; color: #0f2557; line-height: 1; }
+    h2 { font-size: 1.25rem; font-weight: 600; margin-top: 0.75rem; }
+    p  { color: #64748b; font-size: 0.875rem; margin-top: 0.5rem; max-width: 340px; }
+    a  {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.625rem 1.5rem;
+      background: #0f2557;
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    a:hover { background: #1a3a80; }
+    footer { margin-top: 3rem; font-size: 0.7rem; color: #94a3b8; }
+  </style>
+  <script>
+    // GitHub Pages SPA routing : on 404, save path and redirect to root
+    sessionStorage.setItem('spa-path', location.pathname + location.search + location.hash);
+    location.replace('/');
+  </script>
+</head>
+<body>
+  <img src="/logo.png" alt="Logo EEC" />
+  <h1>404</h1>
+  <h2>Page introuvable</h2>
+  <p>La page que vous recherchez n'existe pas ou a été déplacée.</p>
+  <a href="/login">Retour à la connexion</a>
+  <footer>© 2026 Présidence de l'Église Évangélique du Congo</footer>
+</body>
+</html>

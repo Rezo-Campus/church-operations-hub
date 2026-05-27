@@ -1,0 +1,7 @@
+User-agent: *
+# Plateforme administrative privée — indexation désactivée
+Disallow: /dashboard/
+Disallow: /login
+Allow: /
+
+Sitemap: https://presidence-eec.com/sitemap.xml
